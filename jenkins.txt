@@ -1,0 +1,18 @@
+# Download Jenkins package locally
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+# Import the key
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+# Update your local package index
+sudo yum upgrade
+# Install Jenkins and Java
+sudo yum install jenkins java-1.8.0-openjdk-devel
+sudo systemctl daemon-reload
+# Start the Jenkins server
+sudo systemctl start jenkins
+# Enable the service to load during boot
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+# Stop the service
+sudo systemctl stop jenkins
+
+https://unix.stackexchange.com/questions/558676/unit-jenkins-service-could-not-be-found

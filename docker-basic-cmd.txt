@@ -1,0 +1,29 @@
+docker build . (run the Dockerfile from current location to create an Image)
+
+docker images (print all available images)
+
+docker run {IMAGE_ID} (will create and run a container with the specified image)
+
+docker exec -it {CONTAINER_ID} (open a bash terminal inside the container)
+
+docker ps (print all the running containers)
+
+docker kill {CONTAINER_ID} (terminate the container)
+
+docker container help (possible docker commands related to a container)
+
+sudo service docker start (start docker service)
+
+systemctl show --property ActiveState docker (check if the Docker engine is running)
+
+docker stop <container_ID>
+
+docker container rm <container_ID>
+
+sudo service docker stop
+
+docker exec -it <container name> bash (find the container name/ID using docker ps command, and run)
+(install maven apk add maven)
+
+docker exec -it <container id> command
+REF: https://docs.docker.com/engine/reference/commandline/docker/

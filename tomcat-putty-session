@@ -1,0 +1,97 @@
+# Setup tomcat container
+
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+Last login: Fri Feb  4 15:07:16 2022 from 105.112.61.242
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+[ec2-user@ip-172-31-87-97 ~]$ docker ps
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+[ec2-user@ip-172-31-87-97 ~]$ sudo service docker start
+Redirecting to /bin/systemctl start docker.service
+[ec2-user@ip-172-31-87-97 ~]$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[ec2-user@ip-172-31-87-97 ~]$ docker run -u root -d --name jenkins -p 8080:8080 -v jenkins-data:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v "$HOME":/home jenkinsci/blueocean
+docker: Error response from daemon: Conflict. The container name "/jenkins" is already in use by container "c5790b157643c1fa2fa3261decd957431964c93f107af2e807e6d3782b5fc46b". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+[ec2-user@ip-172-31-87-97 ~]$ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[ec2-user@ip-172-31-87-97 ~]$ docker container ls -a
+CONTAINER ID   IMAGE                 COMMAND                  CREATED       STATUS                       PORTS                                                  NAMES
+c5790b157643   jenkinsci/blueocean   "/sbin/tini -- /usr/…"   2 hours ago   Exited (255) 5 minutes ago   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 50000/tcp   jenkins
+01bb7223cc4d   d76a171ee820          "/sbin/tini -- /usr/…"   2 hours ago   Exited (130) 2 hours ago                                                            stoic_carson
+[ec2-user@ip-172-31-87-97 ~]$ docker container start c5790b157643
+c5790b157643
+[ec2-user@ip-172-31-87-97 ~]$ docker ps
+CONTAINER ID   IMAGE                 COMMAND                  CREATED       STATUS         PORTS                                                  NAMES
+c5790b157643   jenkinsci/blueocean   "/sbin/tini -- /usr/…"   2 hours ago   Up 5 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 50000/tcp   jenkins
+[ec2-user@ip-172-31-87-97 ~]$ docker exec -it c5790b157643 bash
+bash-5.1# cat /root/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDAUMD4WzPUDDXpCBifwX3UEpsaeGU1f7MHe5n+etEh96lwENmPax+46pSqPE7G3uSas5JnKArlrSRVS2fefeMxsJ9Zc/pJxVoEKYnUv5pBYCW8YtlT5iXk57lxMa4xUmpF09wiFZSlucjRHVvNf4dk7B2D1rm9GUznEwN/B/s2/fe5F+dVEgoqK8cMASQHcFQ3EVmS3uQcxgvawbHkkroyL2vQsCbV9o0l4gf0lvIYjv3hQY+FC1ArGmm9GFmMdONPAazWQICXzTeNKJ4XxBgV+c47jJT4T1ZMDVBOzc5qGh3ARbC8sHGMKa3a/esda/qdGaA/9SJbx9KAYY9MBvixJtoraJ7Q4/FCSL6UXuS1zzvftIgj7h14hCA7bYxp3McIEJtcHXMkx0q2kBaWAmkbu6iQ2L+vQui4wmLQZrL5C+pJDyjX16ArOKWhPO6ZNnNkFGUNOftQSR2yqmMs061SlBnG43/oLOgQdBn4teVMofZoPmMqa6mR3BuTfoO+muM= root@c5790b157643
+bash-5.1#
+Using username "ec2-user".
+Authenticating with public key "imported-openssh-key"
+Last login: Fri Feb  4 15:47:22 2022 from 197.210.76.181
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+[ec2-user@ip-172-31-87-97 ~]$ docker ps
+CONTAINER ID   IMAGE                 COMMAND                  CREATED       STATUS          PORTS                                                  NAMES
+c5790b157643   jenkinsci/blueocean   "/sbin/tini -- /usr/…"   3 hours ago   Up 44 minutes   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 50000/tcp   jenkins
+[ec2-user@ip-172-31-87-97 ~]$ docker exec -it c5790b157643 bash
+bash-5.1# find . -name *.war
+./usr/share/jenkins/jenkins.war
+./var/jenkins_home/workspace/apples-demo/starter_code/target/auth-course-0.0.1-SNAPSHOT.war
+bash-5.1# docker run -dit --name tomcat -p 8888:8080 tomcat:jdk8
+Unable to find image 'tomcat:jdk8' locally
+jdk8: Pulling from library/tomcat
+0c6b8ff8c37e: Pull complete
+412caad352a3: Pull complete
+e6d3e61f7a50: Pull complete
+461bb1d8c517: Pull complete
+e442ee9d8dd9: Pull complete
+36b5bcea956c: Pull complete
+8ed70148ebcf: Pull complete
+52f42834a87d: Pull complete
+b68cfd25a389: Pull complete
+ddafd5c1b2e9: Pull complete
+Digest: sha256:ad362f671d096e50f5d6fc336bf588a4b0c3d60ed0dc65352ec4958d5fd13d35
+Status: Downloaded newer image for tomcat:jdk8
+69203681e741002a4861e4a777bd01ade913405f99332af0b5150b5ad03b0db7
+bash-5.1# docker ps
+CONTAINER ID   IMAGE                 COMMAND                  CREATED         STATUS             PORTS                                                  NAMES
+69203681e741   tomcat:jdk8           "catalina.sh run"        6 minutes ago   Up 6 minutes       0.0.0.0:8888->8080/tcp, :::8888->8080/tcp              tomcat
+c5790b157643   jenkinsci/blueocean   "/sbin/tini -- /usr/…"   3 hours ago     Up About an hour   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 50000/tcp   jenkins
+bash-5.1# docker exec -it tomcat bash
+root@69203681e741:/usr/local/tomcat# ls
+BUILDING.txt     NOTICE         RUNNING.txt  lib             temp          work
+CONTRIBUTING.md  README.md      bin          logs            webapps
+LICENSE          RELEASE-NOTES  conf         native-jni-lib  webapps.dist
+root@69203681e741:/usr/local/tomcat# cp -r webapps.dist/* webapps
+root@69203681e741:/usr/local/tomcat# find . -name context.xml
+./conf/context.xml
+./webapps/examples/META-INF/context.xml
+./webapps/host-manager/META-INF/context.xml
+./webapps/manager/META-INF/context.xml
+./webapps.dist/examples/META-INF/context.xml
+./webapps.dist/host-manager/META-INF/context.xml
+./webapps.dist/manager/META-INF/context.xml
+root@69203681e741:/usr/local/tomcat# ^C
+root@69203681e741:/usr/local/tomcat# vi ./webapps/manager/META-INF/context.xml
+bash: vi: command not found
+root@69203681e741:/usr/local/tomcat# nano ./webapps/manager/META-INF/context.xml
+bash: nano: command not found
+root@69203681e741:/usr/local/tomcat# app-get update
+bash: app-get: command not found
+root@69203681e741:/usr/local/tomcat# apk update
+bash: apk: command not found
+root@69203681e741:/usr/local/tomcat# exit
+exit
+bash-5.1#

@@ -4,7 +4,7 @@ docker images (print all available images)
 
 docker run {IMAGE_ID} (will create and run a container with the specified image)
 
-docker exec -it {CONTAINER_ID} (open a bash terminal inside the container)
+docker exec -it {CONTAINER_ID} bash (open a bash terminal inside the container)
 
 docker ps (print all the running containers)
 
@@ -24,6 +24,12 @@ sudo service docker stop
 
 docker exec -it <container name> bash (find the container name/ID using docker ps command, and run)
 (install maven apk add maven)
+
+docker container ls (list containers)
+
+docker container ls -a (list containers including those not started)
+
+docker start <container>
 
 docker exec -it <container id> command
 REF: https://docs.docker.com/engine/reference/commandline/docker/

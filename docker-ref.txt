@@ -29,7 +29,7 @@ docker container ls (list containers)
 
 docker container ls -a (list containers including those not started)
 
-docker start <container>
+docker start <container> | <container_id>
 
 docker exec -it <container id> command
 REF: https://docs.docker.com/engine/reference/commandline/docker/

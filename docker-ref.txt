@@ -32,4 +32,23 @@ docker container ls -a (list containers including those not started)
 docker start <container> | <container_id>
 
 docker exec -it <container id> command
+
+#new
+
+# update the existing packages
+sudo yum update
+sudo  yum install docker
+
+sudo useradd host2admin
+sudo passwd host2admin
+# Add the host2admin user to the "docker" user group 
+sudo usermod -aG docker host2admin
+# Add the $USER user to the "docker" user group. The current $USER is ec2-user
+sudo usermod -a -G docker $USER
+sudo reboot
+
+# Reconnect using SSH. The public IP will change after reboot
+sudo service docker start
+# Verify that you can run docker commands without sudo.
+docker run hello-world
 REF: https://docs.docker.com/engine/reference/commandline/docker/

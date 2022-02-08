@@ -14,5 +14,54 @@ sudo systemctl enable jenkins
 sudo systemctl status jenkins
 # Stop the service
 sudo systemctl stop jenkins
+# Open a shell into the Jenkins container
+docker exec -it myContainer bash
+java -version
+echo $JAVA_HOME # 	JAVA_HOME 	The output of echo $JAVA_HOME, such as /opt/java/openjdk
+# We already installed Maven using the command "apk add maven" earlier
+mvn -version
 
 https://unix.stackexchange.com/questions/558676/unit-jenkins-service-could-not-be-found
+
+
+    Configure the Job
+    If you already have a Job created from the earlier demo, go ahead and configure it again. Else, create a new Freestyle project type job, say myFirstJob. (Feel free to check the Pipeline project type, next time).
+        Use the following configuration details, and leave the remaining as default:
+
+Section 	Field 	Value
+General 	Description 	Text of your choice
+	Github project 	Provide your Github repository URL
+Source Code Management 	Git 	Check
+	Repository URL 	Provide your Github repository URL
+	Credentials 	Choose the one you've created in the Global credentials
+Build Triggers 	Poll SCM → Schedule 	* * * * *
+It means poll the code every minute.
+Youcan also use H * * * * to poll once per hour
+Build Environment 	Delete workspace before build starts 	Check
+Jenkins creates a workspace where it stores
+the build file, such as WAR. In our case, this workspace
+will be available in the Jenkins container
+Build 	Add build step 	Invoke top-level Maven targets
+	Goals 	clean compile package
+clean - delete the existing target folder
+compile - compile source code
+package - package the application to WAR file.
+Note that the package type in POM.xml is WAR
+	POM 	Specify the POM file path relative to your repository home,
+such as starter_code/pom.xml
+
+    Above configuration might seem familiar to you. The section responsible for deployment to the target container is Post-build Actions. In this section, choose the Deploy war/ear to a container option, and use the following configuration details:
+
+Field 	Value
+WAR/EAR files 	**/*.war
+Context path 	myApp
+Context represents a single web application running within a given instance of Tomcat.
+Containers 	Choose Tomcat 9
+(Because our Tomcat container is having v9)
+Credentials 	Add a new credentials
+Add Global credentials with username/password as admin/admin .
+Recall that we created these credentials in the Tomcat container, tomcat-users.xml file
+Tomcat URL 	<Private IP of host EC2 instance>:8888
+Recall that we had mapped 8888 port of host with the 8080 port of Tomcat container
+
+        The reason we are using the Private IP of host EC2 instance is because the public one keeps changing with time.
